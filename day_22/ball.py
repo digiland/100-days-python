@@ -7,7 +7,7 @@ class Ball(Turtle):
         self.shape("circle")
         self.color("white")
         self.penup()
-        self.speed(0)
+        self.ball_speed = 0.05
         self.goto(0, 0)
         self.dx = 2
         self.dy = 2
@@ -28,3 +28,4 @@ class Ball(Turtle):
         if self.xcor() > paddle.xcor() - 40 and self.xcor() < paddle.xcor() + 40:
             if self.ycor() < paddle.ycor() + 50 and self.ycor() > paddle.ycor() - 50:
                 self.dx *= -1
+        self.ball_speed *= 0.9

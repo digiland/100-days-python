@@ -13,9 +13,13 @@ correct = 0
 data = pd.read_csv("50_states.csv")
 
 states = data.state.tolist()
+
 while correct < 50:
     answer = screen.textinput(
         f"{correct}/50 States Correct", "Guess a state").capitalize()
+
+    if answer == 'Exit':
+        break
 
     if answer in states:
         correct += 1
@@ -29,6 +33,10 @@ while correct < 50:
         text.hideturtle()
         text.goto(int(state.x), int(state.y))
         text.write(f"{answer}", font=("Arial", 12, "normal"))
+
+# states to learn
+new_data = pd.DataFrame(states)
+new_data.to_csv("states_to_learn.csv")
 
 
 screen.exitonclick()

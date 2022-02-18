@@ -34,7 +34,7 @@ while not game_over:
     screen.update()
     ball.collision_paddle(paddle_a)
     ball.collision_paddle(paddle_b)
-    time.sleep(0.01)
+    time.sleep(ball.ball_speed)
 
     score_a, score_b = 0, 0
 

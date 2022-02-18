@@ -45,6 +45,13 @@ class Snake:
         if self.head.heading() != 0 and self.head.heading() != 180:
             self.head.setheading(0)
 
+    def reset(self):
+        for segment in self.segments:
+            segment.goto(2000, 2000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
+
     def extend_snake(self):
         new_segment = Turtle()
         new_segment.shape("square")

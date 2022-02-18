@@ -31,20 +31,19 @@ while not game_over:
     if snake.head.distance(food) < 15:
         food.refresh()
         score.update_score()
-        print("Food eaten")
         snake.extend_snake()
         # snake.add_segment()
 
     # detect collision with border
     if snake.head.xcor() > 390 or snake.head.xcor() < -390 or snake.head.ycor() > 390 or snake.head.ycor() < -390:
-        score.game_over()
-        game_over = True
+        score.reset()
+        snake.reset()
 
     # Detect collision with self
     for segment in snake.segments[1:]:
         if segment.distance(snake.head) < 10:
-            score.game_over()
-            game_over = True
+            score.reset()
+            snake.reset()
 
 
 screen.exitonclick()
