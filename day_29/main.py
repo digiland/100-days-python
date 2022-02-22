@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 from password_generator import password_generator
 
@@ -20,21 +21,53 @@ def save_password():
     website = website_entry.get()
     password = password_entry.get()
 
+    new_data = {
+        website: {
+            "email": email,
+            "password": password
+        }
+    }
+
     if email == "" or website == "" or password == "":
         messagebox.showerror("Error", "Please fill in all fields")
     else:
-        is_ok = messagebox.askokcancel(
-            "Saved", f"Your password for {website} is {password}")
-        if is_ok:
-            with open("passwords.txt", "a") as file:
-                file.write(f"{email} | {website} | {password}\n")
+        try:
+            with open("passwords.json", "r") as file:
+                data = json.load(file)
+                data.update(new_data)
+        except FileNotFoundError:
+            with open("passwords.json", "w") as file:
+                json.dump(new_data, file)
+        else:
+            with(open("passwords.json", "w")) as file:
+                json.dump(data, file, indent=4)
+                messagebox.showinfo("Saved", "Password saved successfully")
 
-            website_entry.delete(0, END)
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
+
+
+def search():
+    website = website_entry.get()
+    try:
+        with open("passwords.json", "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showinfo("Error", "No passwords saved")
+    else:
+        try:
+            password = data[website]["password"]
+            email = data[website]["email"]
+        except KeyError:
+            messagebox.showerror("Error", "Website not found")
+        else:
             password_entry.delete(0, END)
+            password_entry.insert(0, password)
+            email_entry.delete(0, END)
+            email_entry.insert(0, email)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
-
 
 window = Tk()
 window.title("Password Generator")
@@ -72,6 +105,10 @@ password_entry.grid(row=3, column=1)
 generate_button = Button(
     window, text="Generate Password", command=new_password)
 generate_button.grid(row=3, column=2)
+
+search_button = Button(
+    window, text="Search", command=search)
+search_button.grid(row=1, column=2)
 
 add_button = Button(window, text="Add", width=36,
                     bg="#ffffff", command=save_password)
